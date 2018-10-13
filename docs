@@ -1,0 +1,46 @@
+Flume ? http://www.bigdatareflections.net/blog/?p=35
+https://eventador.io/blog/python-examples/
+https://timber.io/blog/hello-world-in-kafka-using-python/
+
+https://towardsdatascience.com/kafka-python-explained-in-10-lines-of-code-800e3e07dad1
+pip install kafka-python
+conda install -c conda-forge kafka-python
+
+
+start zookeeper
+mak@mak-Aspire-A515-51G:~/Kafka_Python/kafka_2.11-1.1.0$ bin/zookeeper-server-start.sh config/zookeeper.properties
+start kafka
+mak@mak-Aspire-A515-51G:~/Kafka_Python/kafka_2.11-1.1.0$ bin/kafka-server-start.sh config/server.properties
+create topic
+bin/kafka-topics.sh  --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic sample
+
+In one window
+mak@mak-Aspire-A515-51G:~/Kafka_Python/kafka_2.11-1.1.0$ python
+Python 3.6.4 |Anaconda, Inc.| (default, Jan 16 2018, 18:10:19) 
+[GCC 7.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+>>> from kafka import KafkaProducer
+>>> producer = KafkaProducer(bootstrap_servers='localhost:9092')
+>>> producer.send('sample', b'Hello, World!')
+<kafka.producer.future.FutureRecordMetadata object at 0x7f51fabb4ba8>
+>>> producer.send('sample', key=b'message-two', value=b'This is Kafka-Python')
+<kafka.producer.future.FutureRecordMetadata object at 0x7f51fabc3780>
+
+In other window
+mak@mak-Aspire-A515-51G:~/Kafka_Python/kafka_2.11-1.1.0$ 
+mak@mak-Aspire-A515-51G:~/Kafka_Python/kafka_2.11-1.1.0$ python
+Python 3.6.4 |Anaconda, Inc.| (default, Jan 16 2018, 18:10:19) 
+[GCC 7.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+>>> from kafka import KafkaConsumer
+>>> consumer = KafkaConsumer('sample')
+>>> for message in consumer:
+...     print (message)
+... 
+ConsumerRecord(topic='sample', partition=0, offset=2, timestamp=1539410183795, timestamp_type=0, key=None, value=b'Hello, World!', checksum=None, serialized_key_size=-1, serialized_value_size=13)
+ConsumerRecord(topic='sample', partition=0, offset=3, timestamp=1539410184363, timestamp_type=0, key=b'message-two', value=b'This is Kafka-Python', checksum=None, serialized_key_size=11, serialized_value_size=20)
+
+
+
